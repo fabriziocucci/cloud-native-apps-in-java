@@ -7,4 +7,5 @@ repositories {
 
 dependencies {
 	compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.24.1'
+	compile project(':microservice-chassis')
 }
