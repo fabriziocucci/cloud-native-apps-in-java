@@ -1,15 +1,16 @@
 package com.github.fabriziocucci.microservice.helloworld;
 
-import javax.ws.rs.ApplicationPath;
+import com.github.fabriziocucci.microservice.Microservice;
 
-import org.glassfish.jersey.server.ResourceConfig;
-
-@ApplicationPath("/")
-public class HelloWorldMicroservice extends ResourceConfig {
+public class HelloWorldMicroservice extends Microservice {
 
 	public HelloWorldMicroservice() {
 		register(new HelloWorldBinder());
 		register(HelloWorldResource.class);
+	}
+	
+	public static void main(String[] args) {
+		new HelloWorldMicroservice().run();
 	}
 	
 }

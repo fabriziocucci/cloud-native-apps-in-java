@@ -4,4 +4,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies { }
+dependencies {
+	compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.24.1'
+}
