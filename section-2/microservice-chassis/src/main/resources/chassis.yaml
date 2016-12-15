@@ -1,3 +1,13 @@
 embeddedServer:
-  host: localhost
+  host: 0.0.0.0
   port: 8080
+
+serviceDiscovery:
+  serverHost: localhost
+  serverPort: 8500
+# serviceId: ${service.name}-1
+  serviceName: ${service.name}
+# serviceHost: 192.168.0.94
+  servicePort: ${embeddedServer/port}
+  serviceHealthCheckPath: health
+  serviceHealthCheckInterval: 5

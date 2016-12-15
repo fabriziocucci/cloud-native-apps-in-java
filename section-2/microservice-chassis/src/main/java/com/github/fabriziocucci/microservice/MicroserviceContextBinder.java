@@ -11,6 +11,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import com.github.fabriziocucci.microservice.configuration.ConfigurationBinder;
 import com.github.fabriziocucci.microservice.embeddedserver.EmbeddedServerBinder;
+import com.github.fabriziocucci.microservice.healthchecks.HealthChecksBinder;
+import com.github.fabriziocucci.microservice.servicediscovery.ServiceDiscoveryBinder;
 
 class MicroserviceContextBinder<Configuration extends MicroserviceConfiguration> extends AbstractBinder {
 	
@@ -26,6 +28,8 @@ class MicroserviceContextBinder<Configuration extends MicroserviceConfiguration>
 		bind(BuilderHelper.createConstantDescriptor(new ResourceConfig()));
 		bind(ConfigurationBinder.class).to(ChassisBinder.class);
 		bind(EmbeddedServerBinder.class).to(ChassisBinder.class);
+		bind(ServiceDiscoveryBinder.class).to(ChassisBinder.class);
+		bind(HealthChecksBinder.class).to(ChassisBinder.class);
 		bindFactory(MicroserviceContextFactory.class).to(MicroserviceContext.class);
 	}
 
