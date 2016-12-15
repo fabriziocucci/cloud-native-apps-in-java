@@ -1,20 +1,30 @@
 package com.github.fabriziocucci.microservice;
 
-import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.api.TypeLiteral;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
-import com.github.fabriziocucci.microservice.configuration.ConfigurationLoader;
 import com.github.fabriziocucci.microservice.embeddedserver.EmbeddedServer;
 
-public abstract class Microservice<Configuration extends MicroserviceConfiguration> extends ResourceConfig {
+public abstract class Microservice<Configuration extends MicroserviceConfiguration> {
 
-	protected final Configuration configuration;
-
+	private final ServiceLocator serviceLocator;
+	private final MicroserviceContext<Configuration> microserviceContext;
+	
 	protected Microservice(Class<Configuration> configurationClass) {
-		this.configuration = ConfigurationLoader.load(configurationClass);
+		this.serviceLocator = ServiceLocatorUtilities.bind("chassis", new MicroserviceContextBinder<>(configurationClass));
+		this.microserviceContext = serviceLocator.getService(new TypeLiteral<MicroserviceContext<Configuration>>() {}.getType());
 	}
-
+	
 	public void run() {
-		EmbeddedServer.run(this, configuration.getEmbeddedServerConfiguration());
+		configure(microserviceContext);
+		startEmbeddedServer();
 	}
 
+	protected abstract void configure(MicroserviceContext<Configuration> microserviceContext);
+	
+	private void startEmbeddedServer() {
+		this.serviceLocator.getService(EmbeddedServer.class).start();
+	}
+	
 }
