@@ -6,4 +6,5 @@ repositories {
 
 dependencies {
 	compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.24.1'
+	compile 'com.github.fabriziocucci:yacl4j-core:0.5.0'
 }

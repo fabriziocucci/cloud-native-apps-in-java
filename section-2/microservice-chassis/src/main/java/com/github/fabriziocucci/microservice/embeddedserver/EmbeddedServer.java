@@ -10,14 +10,21 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 public class EmbeddedServer {
 
-	public static void run(ResourceConfig resourceConfig) {
+	public static void run(ResourceConfig resourceConfig, EmbeddedServerConfiguration embeddedServerConfiguration) {
 		try {
-			URI baseUri = UriBuilder.fromUri("http://localhost").port(8080).build();
+			URI baseUri = buildUri(embeddedServerConfiguration);
 			HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
 			server.start();
 		} catch (Exception exception) {
 			throw new IllegalStateException("Unable to start server!", exception);
 		}
+	}
+	
+	private static URI buildUri(EmbeddedServerConfiguration embeddedServerConfiguration) {
+		return UriBuilder.fromUri("http://host:port")
+				.host(embeddedServerConfiguration.getHost())
+				.port(embeddedServerConfiguration.getPort())
+				.build();
 	}
 	
 }

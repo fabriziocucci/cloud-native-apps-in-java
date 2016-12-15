@@ -2,10 +2,11 @@ package com.github.fabriziocucci.microservice.helloworld;
 
 import com.github.fabriziocucci.microservice.Microservice;
 
-public class HelloWorldMicroservice extends Microservice {
+public class HelloWorldMicroservice extends Microservice<HelloWorldConfiguration> {
 
 	public HelloWorldMicroservice() {
-		register(new HelloWorldBinder());
+		super(HelloWorldConfiguration.class);
+		register(new HelloWorldBinder(configuration));
 		register(HelloWorldResource.class);
 	}
 	
