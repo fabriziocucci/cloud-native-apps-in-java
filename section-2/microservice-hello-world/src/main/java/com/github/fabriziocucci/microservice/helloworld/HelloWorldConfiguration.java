@@ -5,7 +5,7 @@ import com.github.fabriziocucci.microservice.MicroserviceConfiguration;
 
 public interface HelloWorldConfiguration extends MicroserviceConfiguration {
 
-	@JsonProperty("service.greeting")
-	String getGreeting();
+	@JsonProperty("service.greetingServiceName")
+	String getGreetingServiceName();
 	
 }

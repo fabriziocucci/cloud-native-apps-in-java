@@ -1,2 +1,2 @@
 service.name: microservice-hello-world
-service.greeting: Hi, ${service.name}!
+service.greetingServiceName: microservice-greeting

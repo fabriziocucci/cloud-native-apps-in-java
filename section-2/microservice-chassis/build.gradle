@@ -7,6 +7,7 @@ repositories {
 dependencies {
 	compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-servlet:2.24.1'
 	compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.24.1'
+	compile 'org.glassfish.jersey.ext:jersey-proxy-client:2.24.1'
 	compile 'com.github.fabriziocucci:yacl4j-core:0.5.0'
 	compile 'com.orbitz.consul:consul-client:0.13.3'
 }

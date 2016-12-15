@@ -12,7 +12,7 @@ public class HelloWorldMicroservice extends Microservice<HelloWorldConfiguration
 	@Override
 	protected void configure(MicroserviceContext<HelloWorldConfiguration> microserviceContext) {
 		microserviceContext.getResourceConfig()
-			.register(new HelloWorldBinder(microserviceContext.getConfiguration()))
+			.register(new HelloWorldBinder(microserviceContext))
 			.register(HelloWorldResource.class);
 	}
 	

@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+repositories {
+	mavenCentral()
+	
+	// It's important to keep mavenLocal as last repository to see the source of dependencies 
+	// while navigating through the code. If in the local repository there is a library but 
+	// not its source than we wouldn't be able to see it. Thanks Gradle!
+	mavenLocal()
+}
+
+dependencies {
+	compile project(':microservice-chassis')
+}

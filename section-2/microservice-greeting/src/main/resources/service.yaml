@@ -1,0 +1,4 @@
+service.name: microservice-greeting
+
+embeddedServer:
+  port: 8181

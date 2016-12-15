@@ -14,6 +14,7 @@ import com.github.fabriziocucci.microservice.MicroserviceConfiguration;
 import com.google.common.net.HostAndPort;
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
+import com.orbitz.consul.HealthClient;
 import com.orbitz.consul.model.agent.ImmutableRegistration;
 import com.orbitz.consul.model.agent.Registration;
 import com.orbitz.consul.model.agent.Registration.RegCheck;
@@ -29,7 +30,9 @@ public class ServiceDiscoveryBinder extends ChassisBinder {
 	protected void configure() {
 		bindFactory(AgentClientFactory.class).to(AgentClient.class);
 		bindFactory(RegistrationFactory.class).to(Registration.class);
+		bindFactory(HealthClientFactory.class).to(HealthClient.class);
 		bind(ConsulServiceDiscoveryManager.class).to(ServiceDiscoveryManager.class);
+		bind(DiscoverableServiceBuilder.class).to(DiscoverableServiceBuilder.class);
 	}
 
 	private static class AgentClientFactory implements Factory<AgentClient> {
@@ -97,6 +100,30 @@ public class ServiceDiscoveryBinder extends ChassisBinder {
 
 		@Override
 		public void dispose(Registration instance) {
+			// nothing interesting to do!
+		}
+		
+	}
+	
+	private static class HealthClientFactory implements Factory<HealthClient> {
+		
+		private final ServiceDiscoveryConfiguration serviceDiscoveryConfiguration;
+		
+		@Inject
+		private HealthClientFactory(MicroserviceConfiguration microserviceConfiguration) {
+			this.serviceDiscoveryConfiguration = microserviceConfiguration.getServiceDiscoveryConfiguration();
+		}	
+		
+		@Override
+		public HealthClient provide() {
+			return Consul.builder()
+					.withHostAndPort(HostAndPort.fromParts(serviceDiscoveryConfiguration.serverHost, serviceDiscoveryConfiguration.serverPort))
+					.build()
+					.healthClient();
+		}
+
+		@Override
+		public void dispose(HealthClient instance) {
 			// nothing interesting to do!
 		}
 		

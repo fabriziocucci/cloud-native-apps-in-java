@@ -2,12 +2,18 @@ package com.github.fabriziocucci.microservice.helloworld;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
+import com.github.fabriziocucci.microservice.MicroserviceContext;
+import com.github.fabriziocucci.microservice.servicediscovery.DiscoverableServiceBuilder;
+
 public class HelloWorldBinder extends AbstractBinder {
 
-	private final HelloWorldConfiguration helloWorldConfiguration;
+	private final HelloWorldConfiguration configuration;
+	private final DiscoverableServiceBuilder discoverableServiceBuilder;
 	
-	public HelloWorldBinder(HelloWorldConfiguration helloWorldConfiguration) {
-		this.helloWorldConfiguration = helloWorldConfiguration;
+
+	public HelloWorldBinder(MicroserviceContext<HelloWorldConfiguration> microserviceContext) {
+		this.configuration = microserviceContext.getConfiguration();
+		this.discoverableServiceBuilder = microserviceContext.getDiscoverableServiceBuilder();
 	}
 
 	@Override
@@ -16,7 +22,7 @@ public class HelloWorldBinder extends AbstractBinder {
 	}
 	
 	private GreetingService greetingService() {
-		return new HelloWorldGreetingService(helloWorldConfiguration.getGreeting());
+		return discoverableServiceBuilder.build(configuration.getGreetingServiceName(), GreetingService.class);
 	}
 	
 }
