@@ -1,5 +1,7 @@
 package com.github.fabriziocucci.microservice;
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
 import org.glassfish.hk2.api.Factory;
@@ -17,22 +19,34 @@ import com.github.fabriziocucci.microservice.servicediscovery.ServiceDiscoveryBi
 class MicroserviceContextBinder<Configuration extends MicroserviceConfiguration> extends AbstractBinder {
 	
 	private final Class<Configuration> configurationClass;
+	private final Class<? extends ChassisBinder>[] externalChassisBinderClasses;
 	
-	MicroserviceContextBinder(Class<Configuration> configurationClass) {
+	MicroserviceContextBinder(Class<Configuration> configurationClass, Class<? extends ChassisBinder>[] externalChassisBinderClasses) {
 		this.configurationClass = configurationClass;
+		this.externalChassisBinderClasses = externalChassisBinderClasses;
 	}
 
 	@Override
 	protected void configure() {
+		bindInternalChassisBinderClasses();
+		bindExternalChassisBinderClasses();
+		bindFactory(MicroserviceContextFactory.class).to(MicroserviceContext.class);
+	}
+	
+	private void bindInternalChassisBinderClasses() {
 		bind(BuilderHelper.createConstantDescriptor(configurationClass));
 		bind(BuilderHelper.createConstantDescriptor(new ResourceConfig()));
 		bind(ConfigurationBinder.class).to(ChassisBinder.class);
 		bind(EmbeddedServerBinder.class).to(ChassisBinder.class);
 		bind(ServiceDiscoveryBinder.class).to(ChassisBinder.class);
 		bind(HealthChecksBinder.class).to(ChassisBinder.class);
-		bindFactory(MicroserviceContextFactory.class).to(MicroserviceContext.class);
 	}
-
+	
+	private void bindExternalChassisBinderClasses() {
+		Arrays.stream(externalChassisBinderClasses)
+			.forEach(externalChassisBinderClass -> bind(externalChassisBinderClass).to(ChassisBinder.class));
+	}
+	
 	@SuppressWarnings("rawtypes")
 	private static class MicroserviceContextFactory implements Factory<MicroserviceContext> {
 		

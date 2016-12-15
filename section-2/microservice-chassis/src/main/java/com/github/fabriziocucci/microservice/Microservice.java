@@ -11,16 +11,17 @@ public abstract class Microservice<Configuration extends MicroserviceConfigurati
 	private final ServiceLocator serviceLocator;
 	private final MicroserviceContext<Configuration> microserviceContext;
 	
-	protected Microservice(Class<Configuration> configurationClass) {
-		this.serviceLocator = ServiceLocatorUtilities.bind("chassis", new MicroserviceContextBinder<>(configurationClass));
-		this.microserviceContext = serviceLocator.getService(new TypeLiteral<MicroserviceContext<Configuration>>() {}.getType());
+	@SafeVarargs
+	protected Microservice(Class<Configuration> configurationClass, Class<? extends ChassisBinder>...externalChassisBinderClasses) {
+		this.serviceLocator = ServiceLocatorUtilities.bind("chassis", new MicroserviceContextBinder<>(configurationClass, externalChassisBinderClasses));
+		this.microserviceContext = this.serviceLocator.getService(new TypeLiteral<MicroserviceContext<Configuration>>() {}.getType());
 	}
 	
-	public void run() {
-		configure(microserviceContext);
+	public final void run() {
+		configure(this.microserviceContext);
 		startEmbeddedServer();
 	}
-
+	
 	protected abstract void configure(MicroserviceContext<Configuration> microserviceContext);
 	
 	private void startEmbeddedServer() {

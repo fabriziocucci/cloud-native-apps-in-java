@@ -18,6 +18,7 @@ public class ConfigurationBinder<Configuration extends MicroserviceConfiguration
 	protected void configure() {
 		Configuration configuration = Yacl4jConfigurationLoader.load(configurationClass);
 		bind(configuration).to(MicroserviceConfiguration.class);
+		bind(configuration).to(configurationClass);
 	}
 	
 }

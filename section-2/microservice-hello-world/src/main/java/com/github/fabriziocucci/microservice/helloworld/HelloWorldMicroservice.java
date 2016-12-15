@@ -6,13 +6,12 @@ import com.github.fabriziocucci.microservice.MicroserviceContext;
 public class HelloWorldMicroservice extends Microservice<HelloWorldConfiguration> {
 
 	public HelloWorldMicroservice() {
-		super(HelloWorldConfiguration.class);
+		super(HelloWorldConfiguration.class, HelloWorldBinder.class);
 	}
-
+	
 	@Override
 	protected void configure(MicroserviceContext<HelloWorldConfiguration> microserviceContext) {
 		microserviceContext.getResourceConfig()
-			.register(new HelloWorldBinder(microserviceContext))
 			.register(HelloWorldResource.class);
 	}
 	
