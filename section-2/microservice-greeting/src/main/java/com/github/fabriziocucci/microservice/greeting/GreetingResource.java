@@ -7,9 +7,14 @@ import java.util.Random;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @Path("/greet")
 public class GreetingResource {
 
+	private static final Logger LOGGER = LogManager.getLogger();
+	
 	private final List<String> greetings = Arrays.asList(
 			"Hi World!", 
 			"Hello World!", 
@@ -19,6 +24,7 @@ public class GreetingResource {
 	
 	@GET
 	public String greet() {
+		LOGGER.info("Received request in greeting service");
 		return greetings.get(random.nextInt(greetings.size()));
 	}
 	

@@ -11,6 +11,8 @@ import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 
+import com.github.fabriziocucci.microservice.multitenancy.TenantHeaderFilter;
+
 public class DiscoverableServiceBuilder {
 
 	private final ServiceDiscoveryManager serviceDiscoveryManager;
@@ -26,7 +28,7 @@ public class DiscoverableServiceBuilder {
 			@Override
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				URI serviceUri = serviceDiscoveryManager.discover(serviceName);
-				WebTarget serviceWebTarget = ClientBuilder.newClient().target(serviceUri);
+				WebTarget serviceWebTarget = ClientBuilder.newClient().register(TenantHeaderFilter.class).target(serviceUri);
 				T service = WebResourceFactory.newResource(serviceClass, serviceWebTarget);
 				return method.invoke(service, args);
 			}
